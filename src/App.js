@@ -5,8 +5,9 @@ import Note from "./Note";
 import db from "./db";
 
 function App() {
+  const DEFAULT_NOTE = { text: "" };
   const [currentNoteId, setCurrentNoteId] = useState();
-  const [currentNote, setCurrentNote] = useState({ text: "" });
+  const [currentNote, setCurrentNote] = useState(DEFAULT_NOTE);
 
   const [notes, setNotes] = useState([]);
 
@@ -71,15 +72,41 @@ function App() {
   function wipeTable() {
     db.table("notes").clear();
   }
+
+  function onNewNote() {
+    setCurrentNoteId();
+    setCurrentNote(DEFAULT_NOTE);
+  }
+
+  function onDeleteNote() {
+    db.table("notes")
+      .delete(currentNoteId)
+      .then(() => {
+        setNotes([...notes.filter(note => note.id !== currentNoteId)]);
+        setCurrentNoteId();
+        setCurrentNote(DEFAULT_NOTE);
+      });
+  }
+
   return (
     <div className="App">
       <div className="App-layout">
         <div className="App-sidebar">
-          <NoteList onClickNote={onClickNote} notes={notes} />
+          <NoteList
+            currentNoteId={currentNoteId}
+            onClickNote={onClickNote}
+            notes={notes}
+          />
           <button onClick={wipeTable}>Wipe ALL Notes</button>
         </div>
         <div className="App-content">
-          <Note onSave={onSaveNote} noteText={currentNote.text} />
+          <Note
+            currentNoteId={currentNoteId}
+            onSave={onSaveNote}
+            onNewNote={onNewNote}
+            onDeleteNote={onDeleteNote}
+            noteText={currentNote.text}
+          />
         </div>
       </div>
     </div>

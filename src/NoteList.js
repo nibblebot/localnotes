@@ -1,11 +1,18 @@
 import React from "react";
+import classnames from "classnames";
 import "./NoteList.css";
 
-function NoteList({ onClickNote, notes }) {
+function NoteList({ currentNoteId, onClickNote, notes }) {
   return (
     <ul className="NoteList">
       {notes.map(note => (
-        <li key={note.id} onClick={() => onClickNote(note.id)}>
+        <li
+          key={note.id}
+          className={classnames("NoteListItem", {
+            active: note.id === currentNoteId
+          })}
+          onClick={() => onClickNote(note.id)}
+        >
           <strong>{note.title}</strong>
           <br />
           {note.preview}
