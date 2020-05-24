@@ -1,6 +1,6 @@
-import React from "react";
-import classnames from "classnames";
-import "./NoteList.css";
+import React from "react"
+import classnames from "classnames"
+import "./NoteList.css"
 
 function NoteList({ currentNoteId, onClickNote, notes }) {
   return (
@@ -19,6 +19,6 @@ function NoteList({ currentNoteId, onClickNote, notes }) {
         </li>
       ))}
     </ul>
-  );
+  )
 }
-export default NoteList;
+export default NoteList

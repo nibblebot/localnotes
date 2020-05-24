@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import NoteList from "./NoteList";
-import Note from "./Note";
-import db from "./db";
+import React, { useState, useEffect } from "react"
+import "./App.css"
+import NoteList from "./NoteList"
+import Note from "./Note"
+import db from "./db"
 
 function App() {
-  const DEFAULT_NOTE = { text: "" };
-  const [currentNoteId, setCurrentNoteId] = useState();
-  const [currentNote, setCurrentNote] = useState(DEFAULT_NOTE);
+  const DEFAULT_NOTE = { text: "" }
+  const [currentNoteId, setCurrentNoteId] = useState()
+  const [currentNote, setCurrentNote] = useState(DEFAULT_NOTE)
 
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState([])
 
   useEffect(() => {
     db.table("notes")
@@ -17,46 +17,46 @@ function App() {
       .reverse()
       .sortBy("date")
       .then(notes => {
-        setNotes(notes);
-      });
-  }, []);
+        setNotes(notes)
+      })
+  }, [])
 
   function onSaveNote(value) {
-    const matches = value.match(/(.*)\n(.*)/);
-    const data = {};
+    const matches = value.match(/(.*)\n(.*)/)
+    const data = {}
 
-    data.date = new Date();
-    data.text = value;
+    data.date = new Date()
+    data.text = value
 
     if (!matches) {
-      data.title = value;
-      data.preview = null;
+      data.title = value
+      data.preview = null
     } else {
-      data.title = matches[1];
-      data.preview = matches[2];
+      data.title = matches[1]
+      data.preview = matches[2]
     }
 
     if (currentNoteId) {
       db.table("notes")
         .update(currentNoteId, data)
         .then(() => {
-          const noteToUpdate = notes.find(note => note.id === currentNoteId);
-          Object.assign(noteToUpdate, data);
+          const noteToUpdate = notes.find(note => note.id === currentNoteId)
+          Object.assign(noteToUpdate, data)
           setNotes([
             noteToUpdate,
             ...notes.filter(note => note.id !== currentNoteId)
-          ]);
-          setCurrentNote(data);
-        });
+          ])
+          setCurrentNote(data)
+        })
     } else {
       db.table("notes")
         .add(data)
         .then(id => {
-          data.id = id;
-          setCurrentNoteId(id);
-          setNotes([data, ...notes]);
-          setCurrentNote(data);
-        });
+          data.id = id
+          setCurrentNoteId(id)
+          setNotes([data, ...notes])
+          setCurrentNote(data)
+        })
     }
   }
 
@@ -64,28 +64,28 @@ function App() {
     db.table("notes")
       .get({ id })
       .then(note => {
-        setCurrentNoteId(id);
-        setCurrentNote(note);
-      });
+        setCurrentNoteId(id)
+        setCurrentNote(note)
+      })
   }
 
   function wipeTable() {
-    db.table("notes").clear();
+    db.table("notes").clear()
   }
 
   function onNewNote() {
-    setCurrentNoteId();
-    setCurrentNote(DEFAULT_NOTE);
+    setCurrentNoteId()
+    setCurrentNote(DEFAULT_NOTE)
   }
 
   function onDeleteNote() {
     db.table("notes")
       .delete(currentNoteId)
       .then(() => {
-        setNotes([...notes.filter(note => note.id !== currentNoteId)]);
-        setCurrentNoteId();
-        setCurrentNote(DEFAULT_NOTE);
-      });
+        setNotes([...notes.filter(note => note.id !== currentNoteId)])
+        setCurrentNoteId()
+        setCurrentNote(DEFAULT_NOTE)
+      })
   }
 
   return (
@@ -110,7 +110,7 @@ function App() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

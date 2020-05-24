@@ -1,12 +1,12 @@
-import React, { useRef } from "react";
-import ContentEditable from "react-contenteditable";
-import "./Note.css";
+import React, { useRef } from "react"
+import ContentEditable from "react-contenteditable"
+import "./Note.css"
 
 function Note({ currentNoteId, onSave, onDeleteNote, onNewNote, noteText }) {
-  const contentEditableRef = useRef();
+  const contentEditableRef = useRef()
 
   function onSaveClick() {
-    onSave(contentEditableRef.current.innerText);
+    onSave(contentEditableRef.current.innerText)
   }
 
   return (
@@ -27,7 +27,7 @@ function Note({ currentNoteId, onSave, onDeleteNote, onNewNote, noteText }) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default Note;
+export default Note
