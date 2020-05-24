@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "classnames": "^2.2.6",
     "dexie": "^2.0.4",
+    "fake-indexeddb": "^3.0.0",
     "lodash": "^4.17.15",
     "react": "^16.13.0",
     "react-contenteditable": "^3.3.3",
