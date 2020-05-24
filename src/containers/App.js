@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import "./App.css"
-import NoteList from "./NoteList"
-import Note from "./Note"
-import db from "./db"
+import NoteList from "../components/NoteList"
+import Note from "../components/Note"
+import db from "../db"
 
 function App() {
   const DEFAULT_NOTE = { text: "" }
