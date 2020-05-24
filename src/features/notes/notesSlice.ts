@@ -88,7 +88,7 @@ export const {
 
 export default notesSlice.reducer
 
-export const fetchNote = (id: string): AppThunk => async dispatch => {
+export const fetchNote = (id: string): AppThunk<void> => async dispatch => {
   try {
     const note = await db.table("notes").get({ id })
     dispatch(selectNote(note))
@@ -96,7 +96,7 @@ export const fetchNote = (id: string): AppThunk => async dispatch => {
     dispatch(setError("Failed to fetch Note"))
   }
 }
-export const fetchNotes = (): AppThunk => async dispatch => {
+export const fetchNotes = (): AppThunk<Promise<any>> => async dispatch => {
   try {
     const notes = await db
       .table("notes")
@@ -106,12 +106,14 @@ export const fetchNotes = (): AppThunk => async dispatch => {
 
     dispatch(setNotes(notes))
     dispatch(selectFirstNote())
+    return Promise.resolve()
   } catch (err) {
     dispatch(setError("Failed to fetch Notes"))
+    return Promise.reject()
   }
 }
 
-export const updateNoteDb = (data: Note): AppThunk => async (
+export const updateNoteDb = (data: Note): AppThunk<void> => async (
   dispatch,
   getState
 ) => {
@@ -125,7 +127,7 @@ export const updateNoteDb = (data: Note): AppThunk => async (
   }
 }
 
-export const createNoteDb = (data: Note): AppThunk => async dispatch => {
+export const createNoteDb = (data: Note): AppThunk<void> => async dispatch => {
   try {
     const noteId = await db.table("notes").add(data)
     data.id = noteId
@@ -135,7 +137,7 @@ export const createNoteDb = (data: Note): AppThunk => async dispatch => {
   }
 }
 
-export const deleteCurrentNoteDb = (): AppThunk => async (
+export const deleteCurrentNoteDb = (): AppThunk<void> => async (
   dispatch,
   getState
 ) => {
