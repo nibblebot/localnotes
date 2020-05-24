@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import "./App.css"
 import NoteList from "../components/NoteList"
 import Note from "../components/Note"
-import db from "../db"
+import db, { resetDatabase } from "../db"
 
 function App() {
   const DEFAULT_NOTE = { text: "" }
@@ -70,7 +70,10 @@ function App() {
   }
 
   function wipeTable() {
-    db.table("notes").clear()
+    resetDatabase()
+    setNotes([])
+    setCurrentNoteId()
+    setCurrentNote(DEFAULT_NOTE)
   }
 
   function onNewNote() {
