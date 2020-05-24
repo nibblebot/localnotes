@@ -2,7 +2,10 @@ import React from "react"
 import classnames from "classnames"
 import "./NoteList.css"
 
-function NoteList({ currentNoteId, onClickNote, notes }) {
+function NoteList({ currentNoteId, onClickNote, notes, error }) {
+  if (error) {
+    return <div>{error}</div>
+  }
   return (
     <ul className="NoteList">
       {notes.map(note => (
