@@ -9,6 +9,9 @@
 .NoteListItem {
   cursor: pointer;
   padding: 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .NoteListItem.active {
   background-color: lightsteelblue;

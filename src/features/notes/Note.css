@@ -28,7 +28,7 @@
 }
 
 .ContentEditable {
-  width: 100%;
+  width: calc(100vw - 48px - 2px);
   padding: 24px;
   word-wrap: break-word;
 }

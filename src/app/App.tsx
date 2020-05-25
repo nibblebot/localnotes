@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, MutableRefObject } from "react"
+import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import truncate from "lodash/fp/truncate"
 
 import "./App.css"
 import { RootState } from "./rootReducer"
@@ -17,15 +16,13 @@ import {
   fetchNotes
 } from "features/notes/notesSlice"
 
-const truncateTitle = truncate({ length: 22 })
-const truncatePreview = truncateTitle
-
 function App() {
   const { currentNote, notes, error } = useSelector(
     (state: RootState) => state.notes
   )
   const dispatch: ThunkDispatch = useDispatch()
   const noteRef: MutableRefObject<any> = useRef()
+  const [showSidebar, setShowSidebar] = useState(true)
 
   useEffect(() => {
     dispatch(fetchNotes()).then(() => {
@@ -43,11 +40,11 @@ function App() {
     }
 
     if (!matches) {
-      data.title = truncateTitle(value)
+      data.title = value
       data.preview = ""
     } else {
-      data.title = truncateTitle(matches[1])
-      data.preview = truncatePreview(matches[3])
+      data.title = matches[1]
+      data.preview = matches[3]
     }
 
     if (currentNote.id) {
@@ -58,7 +55,10 @@ function App() {
     }
   }
 
-  function onClickNote(id: string) {
+  function onOpenNote(id: string) {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      setShowSidebar(false)
+    }
     dispatch(fetchNote(id))
     noteRef.current.focus()
   }
@@ -74,16 +74,28 @@ function App() {
 
   return (
     <div className="App">
-      <div className="App-layout">
-        <div className="App-sidebar">
+      <header>
+        {/* <button onClick={() => setShowSidebar(!showSidebar)}>
+          Toggle Notes List
+        </button> */}
+        {!showSidebar && (
+          <button onClick={() => setShowSidebar(true)}>&lt;</button>
+        )}
+      </header>
+      <div
+        className={
+          "App-layout " + (showSidebar ? "sidebar-open" : "sidebar-closed")
+        }
+      >
+        <aside className="App-sidebar">
           <NoteList
             currentNoteId={currentNote.id}
-            onClickNote={onClickNote}
+            onClickNote={onOpenNote}
             notes={notes}
             error={error}
           />
-        </div>
-        <div className="App-content">
+        </aside>
+        <main className="App-content">
           <Note
             ref={noteRef}
             currentNoteId={currentNote.id}
@@ -92,7 +104,7 @@ function App() {
             onDeleteNote={onDeleteNote}
             noteText={currentNote.text}
           />
-        </div>
+        </main>
       </div>
     </div>
   )

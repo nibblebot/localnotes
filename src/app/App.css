@@ -6,15 +6,8 @@
   flex-direction: column;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+header {
+  border-bottom: 1px solid #acacac;
 }
 
 .App-layout {
@@ -24,17 +17,44 @@
 }
 
 .App-sidebar {
-  width: 328px;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  width: 100%;
+}
+
+.sidebar-closed .App-sidebar {
+  margin-left: -100%;
 }
 
 .App-content {
-  display: flex;
+  display: none;
   flex-direction: column;
   flex: 1 0 auto;
   border-left: 1px solid #acacac;
+}
+
+.sidebar-closed .App-content {
+  display: flex;
+}
+
+@media screen and (min-width: 768px) {
+  .App-sidebar {
+    width: 20rem;
+  }
+  .App-content {
+    display: flex;
+  }
+  .sidebar-open .App-sidebar {
+    margin-left: 0;
+  }
+  .sidebar-closed .App-sidebar {
+    margin-left: -20rem;
+    width: 20rem;
+  }
+  .sidebar-closed .App-content {
+    display: flex;
+  }
 }
 
 .App-link {
