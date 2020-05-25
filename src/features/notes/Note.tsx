@@ -10,19 +10,16 @@ interface NoteProps {
 
 const Note = React.forwardRef(
   ({ onSave, currentNoteText }: NoteProps, ref: any) => {
-    console.log("current note text: ", currentNoteText)
-
     return (
-      <>
-        <div className="Note">
-          <ContentEditable
-            innerRef={ref}
-            className="ContentEditable"
-            html={currentNoteText}
-            onChange={onSave}
-          />
-        </div>
-      </>
+      <div className="Note">
+        <ContentEditable
+          innerRef={ref}
+          className="ContentEditable"
+          html={currentNoteText}
+          onChange={onSave}
+          data-testid="editable-note"
+        />
+      </div>
     )
   }
 )

@@ -13,23 +13,26 @@ import {
   createDraftNote,
   deleteCurrentNoteDb,
   selectNote,
+  selectFirstNote,
   updateNoteDb,
   createNoteDb,
   fetchNotes
 } from "features/notes/notesSlice"
 
 function App() {
-  console.log("App")
   const { currentNote, notes, error } = useSelector(
     (state: RootState) => state.notes
   )
+
   const dispatch: ThunkDispatch = useDispatch()
   const noteRef: MutableRefObject<any> = useRef()
   const [showSidebar, setShowSidebar] = useState(true)
 
   useEffect(() => {
     dispatch(fetchNotes()).then(() => {
-      noteRef.current.focus()
+      if (noteRef.current) {
+        noteRef.current.focus()
+      }
     })
   }, [dispatch])
 
@@ -59,10 +62,8 @@ function App() {
   }
 
   const debouncedSave = debounce((e: ContentEditableEvent) => {
-    console.log("save html: ", e.target.value)
-    console.log("save text: ", noteRef.current.innerText)
     onSaveNote(e.target.value, noteRef.current.innerText)
-  }, 2000)
+  }, 500)
 
   function onOpenNote(note: NoteType) {
     if (window.matchMedia("(max-width: 768px)").matches) {
@@ -79,7 +80,10 @@ function App() {
   }
 
   function onDeleteNote() {
-    dispatch(deleteCurrentNoteDb())
+    debouncedSave.cancel()
+    dispatch(deleteCurrentNoteDb()).then(() => {
+      dispatch(selectFirstNote())
+    })
   }
 
   return (
@@ -110,13 +114,11 @@ function App() {
             )}
             <i className="fas fa-trash-alt" onClick={() => onDeleteNote()}></i>
           </header>
-          {currentNote.text && (
-            <Note
-              ref={noteRef}
-              onSave={debouncedSave}
-              currentNoteText={currentNote.text}
-            />
-          )}
+          <Note
+            ref={noteRef}
+            onSave={debouncedSave}
+            currentNoteText={currentNote.text}
+          />
         </main>
       </div>
     </div>

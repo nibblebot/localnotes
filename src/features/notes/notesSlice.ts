@@ -17,7 +17,7 @@ interface NotesState {
   error: string | null
 }
 
-const draftNote = () => {
+export const draftNote = () => {
   return {
     createdDate: new Date().toString(),
     modifiedDate: new Date().toString(),
@@ -27,7 +27,7 @@ const draftNote = () => {
   }
 }
 
-const initialState: NotesState = {
+export const initialState: NotesState = {
   currentNote: draftNote(),
   notes: [],
   error: null
@@ -88,14 +88,6 @@ export const {
 
 export default notesSlice.reducer
 
-export const fetchNote = (id: string): AppThunk<void> => async dispatch => {
-  try {
-    const note = await db.table("notes").get({ id })
-    dispatch(selectNote(note))
-  } catch (err) {
-    dispatch(setError("Failed to fetch Note"))
-  }
-}
 export const fetchNotes = (): AppThunk<Promise<any>> => async dispatch => {
   try {
     const notes = await db
@@ -105,7 +97,9 @@ export const fetchNotes = (): AppThunk<Promise<any>> => async dispatch => {
       .sortBy("createdDate")
 
     dispatch(setNotes(notes))
-    dispatch(selectFirstNote())
+    if (notes.length) {
+      dispatch(selectFirstNote())
+    }
     return Promise.resolve()
   } catch (err) {
     dispatch(setError("Failed to fetch Notes"))
@@ -137,7 +131,7 @@ export const createNoteDb = (data: Note): AppThunk<void> => async dispatch => {
   }
 }
 
-export const deleteCurrentNoteDb = (): AppThunk<void> => async (
+export const deleteCurrentNoteDb = (): AppThunk<Promise<any>> => async (
   dispatch,
   getState
 ) => {
@@ -145,7 +139,6 @@ export const deleteCurrentNoteDb = (): AppThunk<void> => async (
   try {
     await db.table("notes").delete(currentNote.id)
     dispatch(deleteCurrentNote())
-    dispatch(selectFirstNote())
   } catch (err) {
     dispatch(setError("Delete Note Failed"))
   }
