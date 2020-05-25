@@ -30,17 +30,17 @@ function App() {
     })
   }, [dispatch])
 
-  function onSaveNote(value: string) {
-    const matches = value.match(/(.*)(\n)+(.*)/)
+  function onSaveNote(html: string, text: string) {
+    const matches = text.match(/(.*)(\n)+(.*)/)
     const data: NoteType = {
       modifiedDate: new Date().toString(),
-      text: value,
+      text: html,
       title: "",
       preview: ""
     }
 
     if (!matches) {
-      data.title = value
+      data.title = text
       data.preview = ""
     } else {
       data.title = matches[1]
@@ -98,11 +98,10 @@ function App() {
         <main className="App-content">
           <Note
             ref={noteRef}
-            currentNoteId={currentNote.id}
             onSave={onSaveNote}
             onNewNote={onNewNote}
             onDeleteNote={onDeleteNote}
-            noteText={currentNote.text}
+            currentNoteText={currentNote.text}
           />
         </main>
       </div>

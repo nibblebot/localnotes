@@ -1,47 +1,39 @@
 import React from "react"
-import ContentEditable from "react-contenteditable"
-import "./Note.css"
+import ContentEditable, { ContentEditableEvent } from "react-contenteditable"
 import debounce from "lodash/debounce"
 
+import "./Note.css"
+
 interface NoteProps {
-  currentNoteId?: string
-  noteText: string
-  onSave: Function
   onDeleteNote: Function
   onNewNote: Function
+  onSave: Function
+  currentNoteText: string
 }
 
 const Note = React.forwardRef(
   (
-    { currentNoteId, onSave, onDeleteNote, onNewNote, noteText }: NoteProps,
+    { onSave, onDeleteNote, onNewNote, currentNoteText }: NoteProps,
     ref: any
   ) => {
-    const debouncedSave = debounce(() => {
-      onSave(ref.current.innerText)
+    const debouncedSave = debounce((e: ContentEditableEvent) => {
+      onSave(e.target.value, ref.current.innerText)
     }, 500)
+
     return (
       <>
         <div className="Note">
           <ContentEditable
             innerRef={ref}
             className="ContentEditable"
-            html={noteText.replace(/\n/g, "<br>")}
+            html={currentNoteText}
             onChange={debouncedSave}
           />
         </div>
         <div className="NoteMeta">
-          <span>Note ID: {currentNoteId}</span>
           <div>
             <button onClick={() => onNewNote()}>New Note</button>
             <button onClick={() => onDeleteNote()}>Delete Note</button>
-            <button
-              onClick={() => {
-                onSave(ref.current.innerText)
-                ref.current.focus()
-              }}
-            >
-              Save
-            </button>
           </div>
         </div>
       </>
