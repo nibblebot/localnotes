@@ -3,13 +3,17 @@ import reducer, {
   createDraftNote,
   createNote,
   initialState,
-  Note,
   deleteCurrentNote,
   selectNote,
   selectFirstNote,
+  setError,
   setNotes,
-  draftNote,
-  updateNote
+  updateNote,
+  fetchNotes,
+  updateNoteDb,
+  Note,
+  createNoteDb,
+  deleteCurrentNoteDb
 } from "./notesSlice"
 
 const testNote: Note = {
@@ -71,9 +75,9 @@ describe("Notes Reducer", () => {
       type: createDraftNote
     })
 
-    expect(omit(newDraftNote, "createdDate", "modifiedDate")).toEqual(
-      omit(initialState, "createdDate", "modifiedDate")
-    )
+    expect(
+      omit(newDraftNote.currentNote, "createdDate", "modifiedDate")
+    ).toEqual(omit(initialState.currentNote, "createdDate", "modifiedDate"))
   })
 
   test("should create new note, prepend to list", () => {
@@ -133,5 +137,40 @@ describe("Notes Reducer", () => {
         payload: testNote2Updated
       })
     ).toEqual(twoNoteUpdatedState)
+  })
+})
+
+describe("Notes thunks", () => {
+  test("fetch notes succeeds", async () => {
+    const dispatch = jest.fn()
+    const getState = jest.fn()
+    await fetchNotes()(dispatch, getState, null)
+    expect(dispatch).toHaveBeenCalledWith(setNotes([]))
+  })
+  test("update note succeeds", async () => {
+    const dispatch = jest.fn()
+    const getState = jest.fn(() => {
+      return {
+        notes: oneNoteState
+      }
+    })
+    await updateNoteDb(testNote)(dispatch, getState, null)
+    expect(dispatch).toHaveBeenCalledWith(updateNote(testNote))
+  })
+  test("create note succeeds", async () => {
+    const dispatch = jest.fn()
+    const getState = jest.fn()
+    await createNoteDb(testNote)(dispatch, getState, null)
+    expect(dispatch).toHaveBeenCalledWith(createNote(testNote))
+  })
+  test("delete note succeeds", async () => {
+    const dispatch = jest.fn()
+    const getState = jest.fn(() => {
+      return {
+        notes: oneNoteState
+      }
+    })
+    await deleteCurrentNoteDb()(dispatch, getState, null)
+    expect(dispatch).toHaveBeenCalledWith(deleteCurrentNote())
   })
 })

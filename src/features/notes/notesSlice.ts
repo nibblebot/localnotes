@@ -114,8 +114,8 @@ export const updateNoteDb = (data: Note): AppThunk<void> => async (
   const { currentNote } = getState().notes
   try {
     await db.table("notes").update(currentNote.id, data)
-    data.id = currentNote.id
-    dispatch(updateNote(data))
+    const newNote = { ...data, id: currentNote.id }
+    dispatch(updateNote(newNote))
   } catch (err) {
     dispatch(setError("Update Note Failed"))
   }
@@ -124,10 +124,10 @@ export const updateNoteDb = (data: Note): AppThunk<void> => async (
 export const createNoteDb = (data: Note): AppThunk<void> => async dispatch => {
   try {
     const noteId = await db.table("notes").add(data)
-    data.id = noteId
-    dispatch(createNote(data))
+    const newNote = { ...data, id: noteId }
+    dispatch(createNote(newNote))
   } catch (err) {
-    dispatch(setError("Update Note Failed"))
+    dispatch(setError("Create Note Failed"))
   }
 }
 
