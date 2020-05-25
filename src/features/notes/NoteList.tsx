@@ -1,8 +1,16 @@
 import React from "react"
 import classnames from "classnames"
 import "./NoteList.css"
+import { Note } from "./notesSlice"
 
-function NoteList({ currentNoteId, onClickNote, notes, error }) {
+interface Props {
+  currentNoteId?: string
+  error: string | null
+  notes: Note[]
+  onOpenNote: Function
+}
+
+function NoteList({ currentNoteId, onOpenNote, notes, error }: Props) {
   if (error) {
     return <div>{error}</div>
   }
@@ -14,7 +22,7 @@ function NoteList({ currentNoteId, onClickNote, notes, error }) {
           className={classnames("NoteListItem", {
             active: note.id === currentNoteId
           })}
-          onClick={() => onClickNote(note.id)}
+          onClick={() => onOpenNote(note)}
         >
           <strong>{note.title}</strong>
           <br />

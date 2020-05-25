@@ -1,3 +1,6 @@
+:root {
+  --sidebar-width: 20rem;
+}
 .App {
   position: absolute;
   width: 100%;
@@ -40,7 +43,7 @@ header {
 
 @media screen and (min-width: 768px) {
   .App-sidebar {
-    width: 20rem;
+    width: var(--sidebar-width);
   }
   .App-content {
     display: flex;
@@ -49,14 +52,20 @@ header {
     margin-left: 0;
   }
   .sidebar-closed .App-sidebar {
-    margin-left: -20rem;
-    width: 20rem;
+    margin-left: -var(--sidebar-width);
+    width: var(--sidebar-width);
   }
   .sidebar-closed .App-content {
     display: flex;
   }
 }
 
-.App-link {
-  color: #61dafb;
+.sidebar-header,
+.content-header {
+  display: flex;
+  padding: 10px;
+}
+
+.fa-trash-alt {
+  margin-left: auto;
 }

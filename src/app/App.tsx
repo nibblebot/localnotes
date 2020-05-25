@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, MutableRefObject } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import debounce from "lodash/debounce"
+import { ContentEditableEvent } from "react-contenteditable"
 
 import "./App.css"
 import { RootState } from "./rootReducer"
@@ -10,13 +12,14 @@ import {
   Note as NoteType,
   createDraftNote,
   deleteCurrentNoteDb,
-  fetchNote,
+  selectNote,
   updateNoteDb,
   createNoteDb,
   fetchNotes
 } from "features/notes/notesSlice"
 
 function App() {
+  console.log("App")
   const { currentNote, notes, error } = useSelector(
     (state: RootState) => state.notes
   )
@@ -55,11 +58,18 @@ function App() {
     }
   }
 
-  function onOpenNote(id: string) {
+  const debouncedSave = debounce((e: ContentEditableEvent) => {
+    console.log("save html: ", e.target.value)
+    console.log("save text: ", noteRef.current.innerText)
+    onSaveNote(e.target.value, noteRef.current.innerText)
+  }, 2000)
+
+  function onOpenNote(note: NoteType) {
     if (window.matchMedia("(max-width: 768px)").matches) {
       setShowSidebar(false)
     }
-    dispatch(fetchNote(id))
+    debouncedSave.cancel()
+    dispatch(selectNote(note))
     noteRef.current.focus()
   }
 
@@ -74,35 +84,39 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        {/* <button onClick={() => setShowSidebar(!showSidebar)}>
-          Toggle Notes List
-        </button> */}
-        {!showSidebar && (
-          <button onClick={() => setShowSidebar(true)}>&lt;</button>
-        )}
-      </header>
       <div
         className={
           "App-layout " + (showSidebar ? "sidebar-open" : "sidebar-closed")
         }
       >
         <aside className="App-sidebar">
+          <header className="sidebar-header">
+            <i className="fas fa-plus" onClick={() => onNewNote()}></i>
+          </header>
           <NoteList
             currentNoteId={currentNote.id}
-            onClickNote={onOpenNote}
+            onOpenNote={onOpenNote}
             notes={notes}
             error={error}
           />
         </aside>
         <main className="App-content">
-          <Note
-            ref={noteRef}
-            onSave={onSaveNote}
-            onNewNote={onNewNote}
-            onDeleteNote={onDeleteNote}
-            currentNoteText={currentNote.text}
-          />
+          <header className="content-header">
+            {!showSidebar && (
+              <i
+                className="fas fa-chevron-left"
+                onClick={() => setShowSidebar(true)}
+              ></i>
+            )}
+            <i className="fas fa-trash-alt" onClick={() => onDeleteNote()}></i>
+          </header>
+          {currentNote.text && (
+            <Note
+              ref={noteRef}
+              onSave={debouncedSave}
+              currentNoteText={currentNote.text}
+            />
+          )}
         </main>
       </div>
     </div>
