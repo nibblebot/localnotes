@@ -1,6 +1,7 @@
 import React from "react"
 import ContentEditable from "react-contenteditable"
 import "./Note.css"
+import debounce from "lodash/debounce"
 
 interface NoteProps {
   currentNoteId?: string
@@ -15,6 +16,9 @@ const Note = React.forwardRef(
     { currentNoteId, onSave, onDeleteNote, onNewNote, noteText }: NoteProps,
     ref: any
   ) => {
+    const debouncedSave = debounce(() => {
+      onSave(ref.current.innerText)
+    }, 500)
     return (
       <>
         <div className="Note">
@@ -22,7 +26,7 @@ const Note = React.forwardRef(
             innerRef={ref}
             className="ContentEditable"
             html={noteText.replace(/\n/g, "<br>")}
-            onChange={() => {}}
+            onChange={debouncedSave}
           />
         </div>
         <div className="NoteMeta">
@@ -44,5 +48,7 @@ const Note = React.forwardRef(
     )
   }
 )
+
+Note.displayName = "Note"
 
 export default Note
