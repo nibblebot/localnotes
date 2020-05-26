@@ -11,7 +11,7 @@ export default function SearchBar() {
     dispatch(searchNotes(event.target.value))
   }
   return (
-    <>
+    <div className="search-bar">
       <i className="fas fa-search"></i>
       <input
         className="search-input"
@@ -19,6 +19,6 @@ export default function SearchBar() {
         value={searchValue}
         onChange={handleSearch}
       />
-    </>
+    </div>
   )
 }

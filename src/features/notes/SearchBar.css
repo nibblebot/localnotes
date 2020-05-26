@@ -1,6 +1,10 @@
-.fa-search {
+.search-bar {
+  position: relative;
+}
+.search-bar .fa-search {
   position: absolute;
-  left: 40px;
+  left: 16px;
+  top: 4px;
 }
 
 .search-input {
