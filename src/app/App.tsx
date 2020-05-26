@@ -7,6 +7,8 @@ import "./App.css"
 import { RootState } from "./rootReducer"
 import { ThunkDispatch } from "./store"
 import NoteList from "features/notes/NoteList"
+import ContentHeader from "features/notes/ContentHeader"
+import SidebarHeader from "features/notes/SidebarHeader"
 import Note from "features/notes/Note"
 import {
   Note as NoteType,
@@ -18,7 +20,7 @@ import {
   fetchNotes
 } from "features/notes/notesSlice"
 
-function App() {
+export default function App() {
   const { currentNote, notes, error } = useSelector(
     (state: RootState) => state.notes
   )
@@ -93,9 +95,7 @@ function App() {
         }
       >
         <aside className="App-sidebar">
-          <header className="sidebar-header">
-            <i className="fas fa-plus" onClick={() => onNewNote()}></i>
-          </header>
+          <SidebarHeader onNewNote={onNewNote} />
           <NoteList
             currentNoteId={currentNote.id}
             onOpenNote={onOpenNote}
@@ -104,26 +104,12 @@ function App() {
           />
         </aside>
         <main className="App-content">
-          <header className="content-header">
-            {!showSidebar && (
-              <i
-                className="fas fa-chevron-left"
-                onClick={() => setShowSidebar(true)}
-              ></i>
-            )}
-            <div className="application-name">LocalNotes</div>
-            {currentNote.id && (
-              <>
-                <div className="note-modified-date">
-                  {currentNote.modifiedDate}
-                </div>
-                <i
-                  className="fas fa-trash-alt"
-                  onClick={() => onDeleteNote()}
-                ></i>
-              </>
-            )}
-          </header>
+          <ContentHeader
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
+            currentNote={currentNote}
+            onDeleteNote={onDeleteNote}
+          />
           <Note
             ref={noteRef}
             onSave={debouncedSave}
@@ -134,5 +120,3 @@ function App() {
     </div>
   )
 }
-
-export default App
