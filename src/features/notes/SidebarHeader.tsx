@@ -1,11 +1,16 @@
 import React from "react"
-interface Props {
-  onNewNote: Function
-}
-export default function SidebarHeader({ onNewNote }: Props) {
+import NewNoteButton from "./NewNoteButton"
+import SearchBar from "./SearchBar"
+
+export default function SidebarHeader({
+  createNewNote
+}: {
+  createNewNote: Function
+}) {
   return (
     <header className="sidebar-header">
-      <i className="fas fa-plus" onClick={() => onNewNote()}></i>
+      <NewNoteButton createNewNote={createNewNote} />
+      <SearchBar />
     </header>
   )
 }

@@ -19,6 +19,7 @@ function NoteList({ currentNoteId, onOpenNote, notes, error }: Props) {
       {notes.map(note => (
         <li
           key={note.id}
+          data-testid="note-list-item"
           className={classnames("NoteListItem", {
             active: note.id === currentNoteId
           })}

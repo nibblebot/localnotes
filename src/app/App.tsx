@@ -12,9 +12,9 @@ import SidebarHeader from "features/notes/SidebarHeader"
 import Note from "features/notes/Note"
 import {
   Note as NoteType,
-  createDraftNote,
   deleteCurrentNoteDb,
   selectNote,
+  createDraftNote,
   updateNoteDb,
   createNoteDb,
   fetchNotes
@@ -77,7 +77,7 @@ export default function App() {
     noteRef.current.focus()
   }
 
-  function onNewNote() {
+  function createNewNote() {
     dispatch(createDraftNote())
     noteRef.current.focus()
   }
@@ -95,7 +95,7 @@ export default function App() {
         }
       >
         <aside className="App-sidebar">
-          <SidebarHeader onNewNote={onNewNote} />
+          <SidebarHeader createNewNote={createNewNote} />
           <NoteList
             currentNoteId={currentNote.id}
             onOpenNote={onOpenNote}

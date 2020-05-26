@@ -26,7 +26,11 @@ export default function ContentHeader({
       {currentNote.id && (
         <>
           <div className="note-modified-date">{currentNote.modifiedDate}</div>
-          <i className="fas fa-trash-alt" onClick={() => onDeleteNote()}></i>
+          <i
+            data-testid="delete-note"
+            className="fas fa-trash-alt"
+            onClick={() => onDeleteNote()}
+          ></i>
         </>
       )}
     </header>

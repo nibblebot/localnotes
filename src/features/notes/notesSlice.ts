@@ -14,7 +14,7 @@ export interface Note {
 interface NotesState {
   currentNote: Note
   notes: Note[]
-  error: string | null
+  error: string
 }
 
 export const draftNote = () => {
@@ -30,7 +30,7 @@ export const draftNote = () => {
 export const initialState: NotesState = {
   currentNote: draftNote(),
   notes: [],
-  error: null
+  error: ""
 }
 
 const notesSlice = createSlice({
@@ -93,7 +93,6 @@ export const fetchNotes = (): AppThunk<Promise<any>> => async dispatch => {
     const notes = await db
       .table("notes")
       .toCollection()
-      .reverse()
       .sortBy("createdDate")
 
     dispatch(setNotes(notes))
@@ -117,7 +116,7 @@ export const updateNoteDb = (data: Note): AppThunk<void> => async (
     const newNote = { ...data, id: currentNote.id }
     dispatch(updateNote(newNote))
   } catch (err) {
-    dispatch(setError("Update Note Failed"))
+    console.error(err)
   }
 }
 
@@ -141,5 +140,27 @@ export const deleteCurrentNoteDb = (): AppThunk<Promise<any>> => async (
     dispatch(deleteCurrentNote())
   } catch (err) {
     dispatch(setError("Delete Note Failed"))
+  }
+}
+
+export const searchNotes = (
+  search: string
+): AppThunk<void> => async dispatch => {
+  try {
+    const notes = await db
+      .table("notes")
+      .where("textWords")
+      .startsWithIgnoreCase(search)
+      .distinct()
+      .toArray()
+
+    dispatch(setNotes(notes))
+    if (notes.length) {
+      dispatch(selectFirstNote())
+    }
+    return Promise.resolve()
+  } catch (err) {
+    dispatch(setError("Failed to search Notes"))
+    return Promise.reject()
   }
 }

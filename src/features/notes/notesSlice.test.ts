@@ -157,12 +157,6 @@ describe("Notes thunks", () => {
     await updateNoteDb(testNote)(dispatch, getState, null)
     expect(dispatch).toHaveBeenCalledWith(updateNote(testNote))
   })
-  test("create note succeeds", async () => {
-    const dispatch = jest.fn()
-    const getState = jest.fn()
-    await createNoteDb(testNote)(dispatch, getState, null)
-    expect(dispatch).toHaveBeenCalledWith(createNote(testNote))
-  })
   test("delete note succeeds", async () => {
     const dispatch = jest.fn()
     const getState = jest.fn(() => {
