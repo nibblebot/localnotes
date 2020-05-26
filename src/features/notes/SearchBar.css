@@ -1,0 +1,11 @@
+.fa-search {
+  position: absolute;
+  left: 40px;
+}
+
+.search-input {
+  height: 24px;
+  width: 100%;
+  margin-left: 10px;
+  padding-left: 24px;
+}
