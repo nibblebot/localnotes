@@ -13,7 +13,6 @@ import {
   createDraftNote,
   deleteCurrentNoteDb,
   selectNote,
-  selectFirstNote,
   updateNoteDb,
   createNoteDb,
   fetchNotes
@@ -62,7 +61,9 @@ function App() {
   }
 
   const debouncedSave = debounce((e: ContentEditableEvent) => {
-    onSaveNote(e.target.value, noteRef.current.innerText)
+    if (e.target.value !== currentNote.text) {
+      onSaveNote(e.target.value, noteRef.current.innerText)
+    }
   }, 500)
 
   function onOpenNote(note: NoteType) {
@@ -81,9 +82,7 @@ function App() {
 
   function onDeleteNote() {
     debouncedSave.cancel()
-    dispatch(deleteCurrentNoteDb()).then(() => {
-      dispatch(selectFirstNote())
-    })
+    dispatch(deleteCurrentNoteDb())
   }
 
   return (
@@ -112,7 +111,18 @@ function App() {
                 onClick={() => setShowSidebar(true)}
               ></i>
             )}
-            <i className="fas fa-trash-alt" onClick={() => onDeleteNote()}></i>
+            <div className="application-name">LocalNotes</div>
+            {currentNote.id && (
+              <>
+                <div className="note-modified-date">
+                  {currentNote.modifiedDate}
+                </div>
+                <i
+                  className="fas fa-trash-alt"
+                  onClick={() => onDeleteNote()}
+                ></i>
+              </>
+            )}
           </header>
           <Note
             ref={noteRef}

@@ -64,6 +64,14 @@ header {
 .content-header {
   display: flex;
   padding: 10px;
+  height: 37px;
+  align-items: center;
+}
+.application-name {
+  margin-right: 10px;
+}
+.note-modified-date {
+  font-size: 0.75rem;
 }
 
 .fa-trash-alt {

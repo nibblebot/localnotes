@@ -29,7 +29,7 @@
 
 .ContentEditable {
   width: calc(100vw - 2px);
-  padding: 24px;
+  padding: 10px;
   word-wrap: break-word;
 }
 
